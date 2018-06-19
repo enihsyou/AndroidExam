@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 import com.enihsyou.androidexamination.domain.BookItem;
 import com.enihsyou.androidexamination.domain.MovieItem;
@@ -24,9 +25,8 @@ import com.enihsyou.androidexamination.network.Networking;
 import com.enihsyou.androidexamination.network.Networking.SuccessCallback;
 import com.enihsyou.androidexamination.network.VolleyNetworking;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
-    MovieFragment.OnMovieListFragmentInteractionListener,
-    BookFragment.OnBookListFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity
+    implements NavigationView.OnNavigationItemSelectedListener, MovieFragment.OnMovieListFragmentInteractionListener, BookFragment.OnBookListFragmentInteractionListener {
 
     public static final int REQ_MOVIE_DETAIL = 0x1001;
 
@@ -55,6 +55,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        Button button = findViewById(R.id.sqlite_button);
+        // button.setVisibility(View.GONE);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                // startActivity(new Intent(MainActivity.this, SqliteActivity.class));
+                startActivity(new Intent(MainActivity.this, DateActivity.class));
+            }
+        });
         populateFromDouban();
     }
 
@@ -66,16 +75,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 MainActivity.this.doubanInTheaters = response;
             }
         }, null);
-    }
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
     }
 
     @Override
@@ -111,9 +110,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 // 处理点击侧边栏 电影按钮 的逻辑
                 final MovieFragment fragment = MovieFragment.newInstance(this.doubanInTheaters);
 
-                getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.main_fragment_container, fragment)
-                    .commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, fragment).commit();
 
                 break;
             }
@@ -150,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivityForResult(intent, REQ_MOVIE_DETAIL);
     }
 
-    /**通过点击海报 从详情Activity返回，显示提示*/
+    /** 通过点击海报 从详情Activity返回，显示提示 */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -158,10 +155,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (requestCode) {
             case REQ_MOVIE_DETAIL:
                 if (resultCode == RESULT_OK) {
-                    String string = resources.getString(R.string.select_movie_detail,
+                    String string =resources.getString(R.string.select_movie_detail,
                         data.getStringExtra(MovieDetailActivity.ACK_MOVIE_DETAIL));
                     Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
                 }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
     }
 }

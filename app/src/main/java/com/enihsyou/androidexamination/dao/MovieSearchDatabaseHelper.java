@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
@@ -14,21 +15,23 @@ public class MovieSearchDatabaseHelper extends SQLiteOpenHelper {
 
     private final static String TAG = MovieSearchDatabaseHelper.class.getSimpleName();
 
+    private static final String TABLE_NAME = "movie_search";
+
+    private static final String SQL_DROP_MOVIE_SEARCH = "DROP TABLE IF EXISTS " + TABLE_NAME + " ;";
+
+    private static final String SQL_CREATE_MOVIE_SEARCH = "CREATE TABLE " +
+        TABLE_NAME +
+        "(\n" +
+        "  id INTEGER PRIMARY KEY AUTOINCREMENT ,\n" +
+        "  keyword TEXT NOT NULL UNIQUE\n" +
+        ");";
+
     private Context context;
 
     public MovieSearchDatabaseHelper(Context context) {
         super(context, "exam.db", null, 1);
         this.context = context;
     }
-
-    private static final String TABLE_NAME = "movie_search";
-
-    private static final String SQL_DROP_MOVIE_SEARCH = "DROP TABLE IF EXISTS " + TABLE_NAME + " ;";
-
-    private static final String SQL_CREATE_MOVIE_SEARCH = "CREATE TABLE " + TABLE_NAME + "(\n" +
-                                                          "  id INTEGER PRIMARY KEY AUTOINCREMENT ,\n" +
-                                                          "  keyword TEXT NOT NULL UNIQUE\n" +
-                                                          ");";
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -44,7 +47,7 @@ public class MovieSearchDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    /**向数据库插入一条记录*/
+    /** 向数据库插入一条记录 */
     public void insertRecord(String keyword) {
         try (final SQLiteDatabase database = getWritableDatabase()) {
             final ContentValues values = new ContentValues();
@@ -56,7 +59,7 @@ public class MovieSearchDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    /** 获取所有的搜索记录*/
+    /** 获取所有的搜索记录 */
     public List<String> getRecords() {
         try (final SQLiteDatabase database = getReadableDatabase()) {
 
@@ -67,6 +70,22 @@ public class MovieSearchDatabaseHelper extends SQLiteOpenHelper {
                 }
                 return keywords;
             }
+        }
+    }
+
+    public void updateRecords(String fromKeyword, String toKeyword) {
+        try (final SQLiteDatabase database = getReadableDatabase()) {
+            final ContentValues values = new ContentValues();
+            values.put("keyword", toKeyword);
+
+            database.update(TABLE_NAME, values, "keyword = ?", new String[]{fromKeyword});
+        }
+    }
+
+    public void deleteRecord(String keyword) {
+        try (final SQLiteDatabase database = getWritableDatabase()) {
+            database.delete(TABLE_NAME, "keyword=?", new String[]{keyword});
+        } catch (SQLiteException ignore) {
         }
     }
 }

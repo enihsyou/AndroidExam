@@ -16,5 +16,9 @@
       android:layout_margin="12dp"
       android:text="@string/usage"
       android:textSize="24sp" />
+
+    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:text="Sqlite" android:id="@+id/sqlite_button"
+    />
   </FrameLayout>
 </android.support.constraint.ConstraintLayout>
