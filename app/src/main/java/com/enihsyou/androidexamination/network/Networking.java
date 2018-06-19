@@ -21,13 +21,6 @@ public interface Networking {
         @Nullable final SuccessCallback<MovieSearchResult> successCallback,
         @Nullable final ErrorCallback errorCallback);
 
-    /**未实现*/
-    @Deprecated
-    void searchBook(
-        @NonNull String keyword,
-        @Nullable final SuccessCallback<MovieSearchResult>successCallback,
-        @Nullable final ErrorCallback errorCallback);
-
     /**获取成功的回调*/
     interface SuccessCallback<T> {
 

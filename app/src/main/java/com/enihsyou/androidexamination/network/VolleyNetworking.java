@@ -79,14 +79,6 @@ public class VolleyNetworking implements Networking {
         this.queue.add(request);
     }
 
-    @Override
-    public void searchBook(
-        @NonNull String keyword,
-        @Nullable SuccessCallback<MovieSearchResult> successCallback,
-        @Nullable ErrorCallback errorCallback) {
-
-    }
-
     @NonNull
     private JsonObjectRequest makeRequest(
         @Nullable final SuccessCallback<MovieSearchResult> successCallback,

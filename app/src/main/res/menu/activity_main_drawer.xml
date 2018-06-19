@@ -4,7 +4,7 @@
   tools:showIn="navigation_view">
 
   <group android:checkableBehavior="single">
-    <item android:id="@+id/nav_movie" android:icon="@drawable/ic_menu_camera" android:title="电影" />
+    <item android:id="@+id/nav_movie" android:icon="@drawable/ic_menu_share" android:title="电影" />
     <item android:id="@+id/nav_book" android:icon="@drawable/ic_menu_gallery" android:title="图书" />
   </group>
 
